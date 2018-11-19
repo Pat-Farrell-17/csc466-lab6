@@ -17,7 +17,6 @@
 #   (the column containing all ratings for that joke/item).
 
 import pandas as pd
-import os
 
 
 # Reads the data file into a pandas DataFrame
@@ -35,8 +34,8 @@ def avgUserRating(userID, df):
     return df.iloc[:,1:101].iloc[userID].mean()
 
 def main():
-    os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6")
-    data = readJester("jester-data-1H.csv")
+    # os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6")
+    data = readJester("data/jester-data-1H.csv")
     print(data.head())
 
 if __name__ == "__main__":
