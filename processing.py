@@ -23,6 +23,18 @@ import pandas as pd
 def readJester(fname):
     return pd.read_csv(fname, na_values=[99])
 
+
+def rating(jokeID, userID, df):
+    return df.iloc[:, jokeID + 1][userID]
+
+
+def jokeRatings(jokeID, df):
+    return df.iloc[:, jokeID + 1]
+
+
+def userRatings(userID, df):
+    return df.iloc[:, 1:101].iloc[userID]
+
 # Given a joke ID and a pandas DataFrame, returns the average rating of the
 # joke for users that rated that joke
 def avgJokeRating(jokeID, df):
@@ -37,6 +49,7 @@ def main():
     # os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6")
     data = readJester("data/jester-data-1H.csv")
     print(data.head())
+    print(jokeRatings(1, data))
 
 if __name__ == "__main__":
     main()
