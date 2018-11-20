@@ -1,3 +1,6 @@
+from math import isnan
+from sys import argv
+
 from numpy import nanmean
 
 from distance import cossim, pearson
@@ -40,23 +43,27 @@ def predict(fm: FrequencyMatrix, userID: int, jokeID: int, byUser: bool, adjust:
         nearest = sorted([(sim, idx) for idx, sim in similarities.items()], reverse=True)
         use = set([elem[1] for elem in nearest[:k]])
 
-    factor = 1 / sum(abs(s) for k, s in similarities.items())
-
     useSims = {k: v for k, v in similarities.items() if k in use}
+
+    factor = 1 / sum(abs(s) for s in useSims.values())
 
     if adjust:
         topSum = 0
-        for idx, sim in useSims:
+        for idx, sim in useSims.items():
             if idx not in means:
                 means[idx] = nanmean(items[idx])
 
-            topSum += sim * (items[itemID][otherID] - means[idx])
+            rate = items.rating(idx, otherID)
+            if not isnan(rate):
+                topSum += sim * (rate - means[idx])
 
         score = means[itemID] + factor * topSum
     else:
         topSum = 0
-        for idx, sim in useSims:
-            topSum += sim * items[itemID][otherID]
+        for idx, sim in useSims.items():
+            rate = items.rating(idx, otherID)
+            if not isnan(rate):
+                topSum += sim * rate
 
         score = factor * topSum
 
@@ -65,4 +72,10 @@ def predict(fm: FrequencyMatrix, userID: int, jokeID: int, byUser: bool, adjust:
 
 # user=false -> items, k=0 -> no knn, pearson=false -> cosine
 def main(jesterFile: str, userID: int, jokeID: int, user: bool, adjust: bool, k: int, pearson: bool):
-    pass
+    predicted, original = predict(FrequencyMatrix(jesterFile), userID, jokeID, user, adjust, k, pearson)
+    print("Original: ", original)
+    print("Predicted: ", predicted)
+
+
+if __name__ == '__main__':
+    main(argv[1], int(argv[2]), int(argv[3]), bool(int(argv[4])), bool(int(argv[5])), int(argv[6]), bool(int(argv[7])))

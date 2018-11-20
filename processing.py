@@ -25,7 +25,7 @@ def readJester(fname):
 
 
 def rating(jokeID, userID, df):
-    return df.iloc[:, jokeID + 1][userID]
+    return df.iloc[userID, jokeID + 1]
 
 
 def jokeRatings(jokeID, df):
@@ -49,7 +49,7 @@ def main():
     # os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6")
     data = readJester("data/jester-data-1H.csv")
     print(data.head())
-    print(jokeRatings(1, data))
+    print()
 
 if __name__ == "__main__":
     main()

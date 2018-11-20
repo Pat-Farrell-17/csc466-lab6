@@ -36,4 +36,7 @@ def pearson(a, b, meanA, meanB):
             bottomSum1 += ai ** 2
             bottomSum2 += bi ** 2
 
+    if bottomSum1 == 0 or bottomSum2 == 0 or topSum == 0:
+        return 0
+
     return topSum / sqrt(bottomSum1 * bottomSum2)
