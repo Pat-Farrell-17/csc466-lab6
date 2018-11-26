@@ -26,6 +26,9 @@ from random import randint
 def readJester(fname):
     return pd.read_csv(fname, na_values=[99])
 
+def buildCossimMatrix(df):
+    return df.replace([np.nan], [0.0])
+
 # Given a joke ID and a pandas DataFrame, returns the average rating of the
 # joke for users that rated that joke
 def avgJokeRating(jokeID, df):
@@ -38,7 +41,7 @@ def avgUserRating(uid, df):
 
 # Given the ratings matrix df, a uid and a jokeid returns the rating that the
 # user gave that joke, or 0 if the user didn't rate it
-def getJokeRating(df, uid, jokeid):
+def rating(jokeid, uid, df):
     if df.isnull().ix[uid, jokeid]:
         return 0
     else:
@@ -81,6 +84,10 @@ def cossimU(df, jidA, jidB):
                 math.sqrt(sum(r **2 for r in vecA if pd.notnull(r))) *
                 math.sqrt(sum(r **2 for r in vecB if pd.notnull(r))))
 def main():
-    #todo
+    os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6\trunk")
+    data = readJester("data/jester-data-1H.csv")
+    print(data.head())
+    print(buildCossimMatrix(data).head())
+
 if __name__ == "__main__":
     main()
