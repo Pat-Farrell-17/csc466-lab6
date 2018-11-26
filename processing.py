@@ -16,18 +16,17 @@
 #   uid (the row that the user's ratings are in) or a jokeid/itemid
 #   (the column containing all ratings for that joke/item).
 
-import math
-import os
-from random import randint
-
-import numpy as np
 import pandas as pd
+import numpy as np
+import os, math
+from random import randint
 
 
 # Reads the data file into a pandas DataFrame
 def readJester(fname):
-    df = pd.read_csv(fname, na_values=[99])
-    df.drop(["Jokes Rated"], axis=1, inplace=True)
+    df = pd.read_csv(fname,header=None, na_values=[99])
+    df.drop(df.columns[0], axis=1, inplace=True)
+    df.set_axis([i for i in range(df.shape[1])], axis='columns', inplace=True)
     return df
 
 def buildCossimMatrix(df):
@@ -89,8 +88,9 @@ def cossimU(df, jidA, jidB):
                 math.sqrt(sum(r **2 for r in vecB if pd.notnull(r))))
 def main():
     os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6\trunk")
-    data = readJester("data/jester-data-1H.csv")
+    data = readJester("data/jester-data-1.csv")
     print(data.head())
+    print(data.shape)
 
 if __name__ == "__main__":
     main()
