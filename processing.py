@@ -25,7 +25,7 @@ from random import randint
 # Reads the data file into a pandas DataFrame
 def readJester(fname):
     df = pd.read_csv(fname, na_values=[99])
-    df.drop(["Jokes Rated"], column=1)
+    df.drop(["Jokes Rated"], axis=1, inplace=True)
     return df
 
 def buildCossimMatrix(df):
@@ -39,7 +39,7 @@ def avgJokeRating(jokeID, df):
 # Given a user ID and a pandas DataFrame, returns the average rating that
 # the user gave the jokes that they rated
 def avgUserRating(uid, df):
-    return df.iloc[:,1:101].iloc[uid].mean()
+    return df.iloc[uid].mean()
 
 # Given the ratings matrix df, a uid and a jokeid returns the rating that the
 # user gave that joke, or 0 if the user didn't rate it
@@ -89,7 +89,6 @@ def main():
     os.chdir(r"C:\Users\Ian\Documents\CSC466\Lab 6\trunk")
     data = readJester("data/jester-data-1H.csv")
     print(data.head())
-    print(buildCossimMatrix(data).head())
 
 if __name__ == "__main__":
     main()
