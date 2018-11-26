@@ -24,7 +24,9 @@ from random import randint
 
 # Reads the data file into a pandas DataFrame
 def readJester(fname):
-    return pd.read_csv(fname, na_values=[99])
+    df = pd.read_csv(fname, na_values=[99])
+    df.drop(["Jokes Rated"], column=1)
+    return df
 
 def buildCossimMatrix(df):
     return df.replace([np.nan], [0.0])
