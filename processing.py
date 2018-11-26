@@ -54,9 +54,9 @@ def rating(jokeid, uid, df):
 # df.iloc[uid, jokeid] is guaranteed to be valid
 # i.e. the user at uid has rated the joke at jokeid
 def getRandJoke(df, uid):
-    jokeid = randint(1, 101)
+    jokeid = randint(0, 99)
     while df.isnull().ix[uid, jokeid]:
-        jokeid = randint(1, 101)
+        jokeid = randint(0, 99)
     return jokeid
 
 # Returns a list of size random (userID, jokeID) tuples from the given DataFrame
