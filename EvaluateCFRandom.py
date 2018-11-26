@@ -5,7 +5,6 @@
 #   Program   : Lab 6 (Collaborative Filtering)
 
 import processing as proc
-import sys
 
 
 # User-based mean utility method
@@ -56,13 +55,10 @@ def weightedSumU(df, uid, jokeid, sim):
     return (1 / k) * wSum
 
 
-
-def main(args):
+def main():
     data = proc.readJester("data/jester-data-1H.csv")
+    print(data)
     print(weightedSumI(data, 0, 1, proc.cossimI))
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Please call with args")
-    else:
-        main(sys.argv)
+    main()

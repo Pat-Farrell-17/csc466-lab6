@@ -16,10 +16,12 @@
 #   uid (the row that the user's ratings are in) or a jokeid/itemid
 #   (the column containing all ratings for that joke/item).
 
-import pandas as pd
-import numpy as np
-import os, math
+import math
+import os
 from random import randint
+
+import numpy as np
+import pandas as pd
 
 
 # Reads the data file into a pandas DataFrame

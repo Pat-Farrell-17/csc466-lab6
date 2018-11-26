@@ -1,24 +1,29 @@
 from math import isnan
 from sys import argv
 
-from numpy import nanmean
+from numpy import nanmean, matrix
 
 from distance import cossim, pearson
-from frequencyMatrix import FrequencyMatrix
+from processing import readJester
 
 
-def predict(fm: FrequencyMatrix, userID: int, jokeID: int, byUser: bool, adjust: bool, k: int, usePearson: bool):
-    original = fm.users[userID][jokeID]
-    fm.dataFrame.set_value(userID, jokeID + 1, float('nan'))
+def transformMatrix(m: matrix, byUser: bool):
+    if byUser:
+        return m
+    else:
+        return m.transpose()
 
+
+def predict(items: matrix, userID: int, jokeID: int, byUser: bool, adjust: bool, k: int, usePearson: bool):
     if byUser:
         itemID = userID
         otherID = jokeID
-        items = fm.users
     else:
         itemID = jokeID
         otherID = userID
-        items = fm.jokes
+
+    original = items[itemID][otherID]
+    items[itemID][otherID] = float('nan')
 
     list = items[itemID]
 
@@ -53,7 +58,7 @@ def predict(fm: FrequencyMatrix, userID: int, jokeID: int, byUser: bool, adjust:
             if idx not in means:
                 means[idx] = nanmean(items[idx])
 
-            rate = items.rating(idx, otherID)
+            rate = items[idx][otherID]
             if not isnan(rate):
                 topSum += sim * (rate - means[idx])
 
@@ -61,18 +66,20 @@ def predict(fm: FrequencyMatrix, userID: int, jokeID: int, byUser: bool, adjust:
     else:
         topSum = 0
         for idx, sim in useSims.items():
-            rate = items.rating(idx, otherID)
+            rate = items[idx][otherID]
             if not isnan(rate):
                 topSum += sim * rate
 
         score = factor * topSum
 
+    items[itemID][otherID] = original
     return score, original
 
 
 # user=false -> items, k=0 -> no knn, pearson=false -> cosine
 def main(jesterFile: str, userID: int, jokeID: int, user: bool, adjust: bool, k: int, pearson: bool):
-    predicted, original = predict(FrequencyMatrix(jesterFile), userID, jokeID, user, adjust, k, pearson)
+    m = transformMatrix(readJester(jesterFile).values, user)
+    predicted, original = predict(m, userID, jokeID, user, adjust, k, pearson)
     print("Original: ", original)
     print("Predicted: ", predicted)
 
