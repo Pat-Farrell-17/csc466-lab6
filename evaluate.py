@@ -4,10 +4,13 @@
 #   Instructor: Dr. Dekhtyar
 #   Program   : Lab 6 (Collaborative Filtering)
 
+from sys import argv
+
+from frequencyMatrix import FrequencyMatrix
+
 import processing as ps
 from predict import predict
-from frequencyMatrix import FrequencyMatrix
-from sys import argv
+
 
 # Generates <size> random test cases which are tested <repeats> time on
 # the specified method
@@ -35,7 +38,7 @@ from sys import argv
 #          15 : item-based, adjusted, knn, pearson similarity
 def randomSample(method: int, size: int, repeats: int):
     k = 50      # Parameterize?
-    jokefile = "data/jester-data-1H.csv"
+    jokefile = "data/jester-data-1.csv"
     mtrx = ps.readJester(jokefile)
     tests = ps.selectTests(mtrx, size)
     print("userID,itemID,Actual_Rating,Predicted_Rating,Delta_Rating")
@@ -120,7 +123,7 @@ def randomSample(method: int, size: int, repeats: int):
 # Size parameter is ignored
 def userTest(method: int, size: int, repeats: int, testCandidates):
     k = 50      # Parameterize?
-    jokefile = "data/jester-data-1H.csv"
+    jokefile = "data/jester-data-1.csv"
     print("userID,itemID,Actual_Rating,Predicted_Rating,Delta_Rating")
     for i in range(repeats):
         predictions = []

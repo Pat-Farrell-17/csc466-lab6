@@ -56,7 +56,7 @@ def weightedSumU(df, uid, jokeid, sim):
 
 
 def main():
-    data = proc.readJester("data/jester-data-1H.csv")
+    data = proc.readJester("data/jester-data-1.csv")
     print(data)
     print(weightedSumI(data, 0, 1, proc.cossimI))
 
