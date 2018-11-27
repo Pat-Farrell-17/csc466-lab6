@@ -35,22 +35,24 @@ def randomSample(method, size, repeats, k):
     jokefile = "data/jester-data-1.csv"
     outfilebase = "evalRandom"
     mtrx = ps.readJester(jokefile)
-    tests = ps.selectTests(mtrx, size)
+
     user = bool(method % 2)
     adjust = True if method in [2,3,6,7,10,11,14,15] else False
     pearson = True if method > 7 else False
     m = transformMatrix(mtrx.values, user)
 
     print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
-
+    predictions = []
     for i in range(repeats):
-        predictions = []
+        predRun = []
+        tests = ps.selectTests(mtrx, size)
         for uid, jokeid in tests:
             pred, act = predict(m, uid, jokeid, user, adjust, k, pearson)
-            predictions.append((uid, jokeid, pred, act))
+            predRun.append((uid, jokeid, pred, act))
             print("{0:3d}\t{1:3d}\t{2:.2f}\t\t{3:.2f}\t\t\t{4:.2f}".format(uid,
                     jokeid, pred, act, pred-act))
-        print("MAE: {0:.3f}\n".format(mae(predictions)))
+        print("MAE: {0:.3f}\n".format(mae(predRun)))
+        predictions += predRun
 
     return predictions
 
