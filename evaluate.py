@@ -7,6 +7,7 @@
 import processing as ps
 from predict import predict, transformMatrix
 from sys import argv
+from math import sqrt
 
 # Generates <size> random test cases which are tested <repeats> time on
 # the specified method
@@ -43,6 +44,7 @@ def randomSample(method, size, repeats, k):
 
     print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
     predictions = []
+    maes = []
     for i in range(repeats):
         predRun = []
         tests = ps.selectTests(mtrx, size)
@@ -51,9 +53,14 @@ def randomSample(method, size, repeats, k):
             predRun.append((uid, jokeid, pred, act))
             print("{0:3d}\t{1:3d}\t{2:.2f}\t\t{3:.2f}\t\t\t{4:.2f}".format(uid,
                     jokeid, pred, act, pred-act))
-        print("MAE: {0:.3f}\n".format(mae(predRun)))
+        meanEr = mae(predRun)
+        print("MAE: {0:.3f}\n".format(meanEr))
+        maes.append(meanEr)
         predictions += predRun
-
+    meanMAE = sum(maes) / len(maes)
+    print("Mean MAE: {}".format(meanMAE))
+    adjMean = [(i - meanMAE)**2 for i in maes]
+    print("Stddev MAE: {}".format(sqrt(sum(adjMean) / len(adjMean))))
     return predictions
 
 
