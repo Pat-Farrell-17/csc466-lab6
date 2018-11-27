@@ -1,0 +1,14 @@
+Ryan Nett (rnett@calpoly.edu) and Patrick Farrell (pifarrel@calpoly.edu)
+
+Handin structure:
+    Report.pdf
+    README
+    lab6.zip
+        data
+            jester-data-1.csv
+        distance.py
+        evaluate.py
+        EvaluateCFList.py
+        EvaluateCFRandom.py
+        predict.py
+        processing.py
