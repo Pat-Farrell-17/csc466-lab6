@@ -6,7 +6,6 @@
 
 import processing as ps
 from predict import predict, transformMatrix
-from frequencyMatrix import FrequencyMatrix
 from sys import argv
 
 # Generates <size> random test cases which are tested <repeats> time on
@@ -32,8 +31,9 @@ from sys import argv
 #          13 : user-based, no adjust, knn, pearson similarity
 #          14 : item-based, adjusted, knn, pearson similarity
 #          15 : user-based, adjusted, knn, pearson similarity
-def randomSample(method, size, repeats, k = 0):
+def randomSample(method, size, repeats, k):
     jokefile = "data/jester-data-1.csv"
+    outfilebase = "evalRandom"
     mtrx = ps.readJester(jokefile)
     tests = ps.selectTests(mtrx, size)
     user = bool(method % 2)
@@ -41,22 +41,23 @@ def randomSample(method, size, repeats, k = 0):
     pearson = True if method > 7 else False
     m = transformMatrix(mtrx.values, user)
 
-    print("userID,itemID,Actual_Rating,Predicted_Rating,Delta_Rating")
+    print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
 
     for i in range(repeats):
         predictions = []
         for uid, jokeid in tests:
             pred, act = predict(m, uid, jokeid, user, adjust, k, pearson)
             predictions.append((uid, jokeid, pred, act))
-            print(uid, jokeid, pred, act, pred - act )
-        print(mae(predictions))
+            print("{0:3d}\t{1:3d}\t{2:.2f}\t\t{3:.2f}\t\t\t{4:.2f}".format(uid,
+                    jokeid, pred, act, pred-act))
+        print("MAE: {0:.3f}\n".format(mae(predictions)))
 
     return predictions
 
 
 # Expects a list of (uid, jokeid) to test
 # Size parameter is ignored
-def userTest(method, size, repeats, tests, k = 0):
+def userTest(method, tests, k):
     jokefile = "data/jester-data-1.csv"
     mtrx = ps.readJester(jokefile)
     user = bool(method % 2)
@@ -64,14 +65,15 @@ def userTest(method, size, repeats, tests, k = 0):
     pearson = True if method > 7 else False
     m = transformMatrix(mtrx.values, user)
 
-    print("userID,itemID,Actual_Rating,Predicted_Rating,Delta_Rating")
-    for i in range(repeats):
-        predictions = []
-        for uid, jokeid in tests:
-            pred, act = predict(m, uid, jokeid, user, adjust, k, pearson)
-            predictions.append((uid, jokeid, pred, act))
-            print(uid, jokeid, pred, act, pred - act )
-        print(mae(predictions))
+    print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
+
+    predictions = []
+    for uid, jokeid in tests:
+        pred, act = predict(m, uid, jokeid, user, adjust, k, pearson)
+        predictions.append((uid, jokeid, pred, act))
+        print("{0:3d}\t{1:3d}\t{2:.2f}\t\t{3:.2f}\t\t\t{4:.2f}".format(uid,
+                jokeid, pred, act, pred-act))
+    print("MAE: {0:.3f}\n".format(mae(predictions)))
     return predictions
 
 # Mean Absolute Error
@@ -94,9 +96,14 @@ def accuracyMeasures(predictions):
     print("Relevant\t{}\t\t{}".format(tp, fn))
     print("Irrelevant\t{}\t\t{}".format(fp, tn))
 
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    f1m = 2 * precision * recall / (precision + recall)
+    if tp == 0:
+        precision = 0.0
+        recall = 0.0
+        f1m = 0.0
+    else:
+        precision = tp / (tp + fp)
+        recall = tp / (tp + fn)
+        f1m = 2 * precision * recall / (precision + recall)
     print("Precision : {}\nRecall : {}\nF1-Measure : {}".format(precision,
                                                                 recall,
                                                                 f1m))
@@ -104,7 +111,14 @@ def accuracyMeasures(predictions):
     return precision, recall, f1m
 
 def main(args):
-    accuracyMeasures(randomSample(14, 15, 1))
+    method = int(args[1])
+    size = int(args[2])
+    repeats = int(args[3])
+    if len(args == 5):
+        k = int(args[4])
+    else:
+        k = 0
+    accuracyMeasures(randomSample(method, size, repeats, k))
 
 if __name__ == "__main__":
     main(argv)

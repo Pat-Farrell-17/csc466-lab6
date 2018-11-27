@@ -4,61 +4,34 @@
 #   Instructor: Dr. Dekhtyar
 #   Program   : Lab 6 (Collaborative Filtering)
 
-import processing as proc
+import evaluate as ev
+from sys import argv
 
-
-# User-based mean utility method
-#
-# Input:    df      - ratings matrix
-#           jokeid  - joke number to predict for
-# Output:   predicted joke rating
-#           (same predicted rating for any user, so uid doesn't matter)
-def meanU(df, jokeid):
-    return proc.avgJokeRating(jokeid, df)
-
-# Item-based mean utility method
-#
-# Input:    df      - ratings matrix
-#           uid     - user to predict for
-# Output:   predicted joke rating for the given user
-#           (same predicted rating for any joke rated by the user, so
-#           jokeid doesn't matter)
-def meanI(df, uid):
-    return proc.avgUserRating(uid, df)
-
-# Item-based weighted sum method
-#
-# Input:    df      - ratings matrix
-#           uid     - user to predict for
-#           jokeid  - joke number to predict for
-# Output:   predicted joke rating for user the given user
-def weightedSumI(df, uid, jokeid, sim):
-    k, wSum = 0, 0
-    for uidOther, _ in df.iterrows():
-        k += abs(sim(df, uid, uidOther))
-        wSum += sim(df, uid, uidOther) * proc.getJokeRating(df, uid, jokeid)
-
-    return (1 / k) * wSum
-
-# User-based weighted sum method
-#
-# Input:    df      - ratings matrix
-#           uid     - user to predict for
-#           jokeid  - joke number to predict for
-# Output:   predicted joke rating for user the given user
-def weightedSumU(df, uid, jokeid, sim):
-    k, wSum = 0, 0
-    for uidOther, _ in df.iterrows():
-        k += abs(sim(df, uid, uidOther))
-        wSum += sim(df, uid, uidOther) * proc.getJokeRating(df, uid, jokeid)
-
-    return (1 / k) * wSum
-
-
-def main():
-    data = proc.readJester("data/jester-data-1.csv")
-    print(data)
-    print(weightedSumI(data, 0, 1, proc.cossimI))
+# If no arguments, print help message
+# Otherwise, run randomSample with passed args
+def main(args):
+    if len(args) == 1:
+        print("Use the following IDs for each method\n")
+        print("0 : item-based, no adjust, no knn, cosine similarity\n"+
+               "1 : user-based, no adjust, no knn, cosine similarity\n"+
+               "2 : item-based, adjusted, no knn, cosine similarity\n"+
+               "3 : user-based, adjusted, no knn, cosine similarity\n"+
+               "4 : item-based, no adjust, knn, cosine similarity\n"+
+               "5 : user-based, no adjust, knn, cosine similarity\n"+
+               "6 : item-based, adjusted, knn, cosine similarity\n"+
+               "7 : user-based, adjusted, knn, cosine similarity\n"+
+               "8 : item-based, no adjust, no knn, pearson similarity\n"+
+               "9 : user-based, no adjust, no knn, pearson similarity\n"+
+               "10 : item-based, adjusted, no knn, pearson similarity\n"+
+               "11 : user-based, adjusted, no knn, pearson similarity\n"+
+               "12 : item-based, no adjust, knn, pearson similarity\n"+
+               "13 : user-based, no adjust, knn, pearson similarity\n"+
+               "14 : item-based, adjusted, knn, pearson similarity\n"+
+               "15 : user-based, adjusted, knn, pearson similarity")
+        print("\nUse k = 0 for no knn")
+        print("\nCall: python EvaluateCFRandom.py <MethodID> <Size> <Repeats> <k>")
+    else:
+        ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), int(args[4])))
 
 if __name__ == "__main__":
-    main()
+    main(argv)
