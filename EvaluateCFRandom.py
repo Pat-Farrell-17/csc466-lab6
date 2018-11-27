@@ -33,10 +33,10 @@ def main(args):
         print("\nUse k = 0 for no knn")
         print("\nCall: python EvaluateCFRandom.py <MethodID> <Size> <Repeats> <k>")
     else:
-        if int(args[1]) < 4 or (8 <= int(args[1]) < 12):
-            ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), 0))
+        if int(args[2]) < 4 or (8 <= int(args[2]) < 12):
+            ev.accuracyMeasures(ev.randomSample(argv[1], int(args[2]), int(args[3]), int(args[4]), 0))
         else:
-            ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), int(args[4])))
+            ev.accuracyMeasures(ev.randomSample(argv[1], int(args[2]), int(args[3]), int(args[4]), int(args[5])))
 
 if __name__ == "__main__":
     main(argv)

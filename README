@@ -12,3 +12,43 @@ Handin structure:
         EvaluateCFRandom.py
         predict.py
         processing.py
+
+You can use your own jester data file, we dd not make any changes to it.
+
+To predict a single rating use:
+predict.py <jesterFile> <userID> <jokeID> <byUser> <adjust> <k> <pearson>
+<jesterFile> is the data csv file (in all executables)
+<byUser> <adjust> and <pearson> are all either 1 (True) or 0 (False).
+<k> is an int, as are <userID> and <jokeID>
+
+To run the random test, use:
+EvaluateCFRandom.py <jesterFile> <method> <size> <repeats> [k]
+[k] only needs to be provided if the method you use requires knn.
+
+<method> is the int id of the method to use.
+To see the methods, run EvaluateCFRandom.py with no arguments, or use the table below.
+
+Methods:
+    0 : item-based, no adjust, no knn, cosine similarity
+    1 : user-based, no adjust, no knn, cosine similarity
+    2 : item-based, adjusted, no knn, cosine similarity
+    3 : user-based, adjusted, no knn, cosine similarity
+    4 : item-based, no adjust, knn, cosine similarity
+    5 : user-based, no adjust, knn, cosine similarity
+    6 : item-based, adjusted, knn, cosine similarity
+    7 : user-based, adjusted, knn, cosine similarity
+    8 : item-based, no adjust, no knn, pearson similarity
+    9 : user-based, no adjust, no knn, pearson similarity
+    10 : item-based, adjusted, no knn, pearson similarity
+    11 : user-based, adjusted, no knn, pearson similarity
+    12 : item-based, no adjust, knn, pearson similarity
+    13 : user-based, no adjust, knn, pearson similarity
+    14 : item-based, adjusted, knn, pearson similarity
+    15 : user-based, adjusted, knn, pearson similarity
+
+To run a specified test, use:
+EvaluateCFList.py <jesterFile> <method> <testFile> [k]
+
+Again, <method> is the method id, and [k] is the optional k value, which is required if the method needs it.
+
+<testFile> is a file containing userID,jokeID lines, where the userID and jokeID are comma seperated, with each entry on its own lines.

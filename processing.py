@@ -13,13 +13,15 @@
 #
 #   All methods that return statistics about the data expect the data
 #   as the DataFrame of the whole data set (parameter df) and either a
-#   uid (the row that the user's ratings are in) or a jokeid/itemid
+#   uid (the row that the user's ratings are in) or a jokeid/jokeID
 #   (the column containing all ratings for that joke/item).
 
-import pandas as pd
-import numpy as np
-import os, math
+import math
+import os
 from random import randint
+
+import numpy as np
+import pandas as pd
 
 
 # Reads the data file into a pandas DataFrame

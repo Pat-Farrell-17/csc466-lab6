@@ -4,10 +4,12 @@
 #   Instructor: Dr. Dekhtyar
 #   Program   : Lab 6 (Collaborative Filtering)
 
+from math import sqrt
+from sys import argv
+
 import processing as ps
 from predict import predict, transformMatrix
-from sys import argv
-from math import sqrt
+
 
 # Generates <size> random test cases which are tested <repeats> time on
 # the specified method
@@ -32,8 +34,7 @@ from math import sqrt
 #          13 : user-based, no adjust, knn, pearson similarity
 #          14 : item-based, adjusted, knn, pearson similarity
 #          15 : user-based, adjusted, knn, pearson similarity
-def randomSample(method, size, repeats, k):
-    jokefile = "data/jester-data-1.csv"
+def randomSample(jokefile, method, size, repeats, k):
     outfilebase = "evalRandom"
     mtrx = ps.readJester(jokefile)
 
@@ -42,7 +43,7 @@ def randomSample(method, size, repeats, k):
     pearson = True if method > 7 else False
     m = transformMatrix(mtrx.values, user)
 
-    print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
+    print("userID\tjokeID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
     predictions = []
     maes = []
     for i in range(repeats):
@@ -66,15 +67,14 @@ def randomSample(method, size, repeats, k):
 
 # Expects a list of (uid, jokeid) to test
 # Size parameter is ignored
-def userTest(method, tests, k):
-    jokefile = "data/jester-data-1.csv"
+def userTest(jokefile, method, tests, k):
     mtrx = ps.readJester(jokefile)
     user = bool(method % 2)
     adjust = True if method in [2,3,6,7,10,11,14,15] else False
     pearson = True if method > 7 else False
     m = transformMatrix(mtrx.values, user)
 
-    print("userID\titemID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
+    print("userID\tjokeID\tActual_Rating\tPredicted_Rating\tDelta_Rating")
 
     predictions = []
     for uid, jokeid in tests:
