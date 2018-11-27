@@ -4,8 +4,10 @@
 #   Instructor: Dr. Dekhtyar
 #   Program   : Lab 6 (Collaborative Filtering)
 
-import evaluate as ev
 from sys import argv
+
+import evaluate as ev
+
 
 # If no arguments, print help message
 # Otherwise, run randomSample with passed args
@@ -31,7 +33,10 @@ def main(args):
         print("\nUse k = 0 for no knn")
         print("\nCall: python EvaluateCFRandom.py <MethodID> <Size> <Repeats> <k>")
     else:
-        ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), int(args[4])))
+        if int(args[1] < 4 or (8 <= args[1] < 12)):
+            ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), 0))
+        else:
+            ev.accuracyMeasures(ev.randomSample(int(args[1]), int(args[2]), int(args[3]), int(args[4])))
 
 if __name__ == "__main__":
     main(argv)
